@@ -1,14 +1,18 @@
-# Start with a base image containing OpenJDK and Tomcat
-FROM tomcat:9.0-jdk11
 
-# Maintainer of the image
-LABEL maintainer="your-email@example.com"
+# Use the official Tomcat base image
+FROM tomcat:9.0
 
-# Add the WAR file to the Tomcat webapps directory
+# Maintainer of the image (optional)
+# LABEL maintainer="your-email@example.com"
+
+# Copy the WAR file to the webapps directory of Tomcat
 COPY target/my-servlet-project.war /usr/local/tomcat/webapps/
 
-# Expose the default Tomcat port
-EXPOSE 8082
+# Change Tomcat to use port 9090 instead of 8080
+RUN sed -i 's/port="8080"/port="9090"/g' /usr/local/tomcat/conf/server.xml
+
+# Expose port 9090
+EXPOSE 9090
 
 # Start Tomcat
 CMD ["catalina.sh", "run"]
